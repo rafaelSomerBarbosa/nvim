@@ -1,30 +1,50 @@
 require("me.remap")
 require("me.lazyvim")
-require("lazy").setup("plugins")
+require("lazy").setup("me.plugins")
+
+-- function GoImports()
+--     local output = vim.fn.systemlist('goimports', vim.fn.getline(1, '$'))
+--     vim.print(output)
+--     vim.fn.setline(1, output)
+-- end
+--
+-- vim.cmd([[autocmd BufWritePre *.go lua GoImports()]])
 
 
-vim.opt.clipboard = 'unnamedplus'
 
-vim.opt.termguicolors = true
+-- vim.cmd([[autocmd BufWritePre *.go :silent! execute ':!goimports' | edit!]])
+-- vim.cmd([[autocmd BufWritePre *.* :normal number=false]])
 
-local is_wsl = vim.fn.has("wsl") == 1
--- local is_mac = vim.fn.has("macunix") == 1
--- local is_linux = not is_wsl and not is_mac
+vim.cmd([[autocmd BufWritePre *.tsx,*.ts Prettier]])
 
--- WSL Clipboard support
-if is_wsl then
-  -- This is NeoVim's recommended way to solve clipboard sharing if you use WSL
-  -- See: https://github.com/neovim/neovim/wiki/FAQ#how-to-use-the-windows-clipboard-from-wsl
-  vim.g.clipboard = {
-    name = "WslClipboard",
-    copy = {
-      ["+"] = "clip.exe",
-      ["*"] = "clip.exe",
-    },
-    paste = {
-      ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-      ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    },
-    cache_enabled = 0,
-  }
-end
+local g = vim.g
+local opt = vim.opt
+local cmd = vim.cmd
+
+opt.clipboard = 'unnamedplus'
+opt.termguicolors = true
+
+opt.compatible = false
+opt.swapfile = false
+opt.hidden = true
+opt.history = 100
+
+opt.number = true
+opt.wrap = false
+opt.signcolumn = 'yes'
+opt.showmatch = true
+opt.showmode = false
+opt.foldmethod = 'marker'
+opt.splitright = true
+opt.splitbelow = true
+opt.conceallevel = 0
+-- opt.colorcolumn = '80'
+opt.cursorline = true
+opt.scrolloff = 10
+opt.expandtab = true
+opt.shiftwidth = 2
+opt.tabstop = 2
+opt.smartindent = true
+opt.shortmess:append {c = true}
+opt.number = true
+opt.autowrite = true

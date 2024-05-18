@@ -1,35 +1,24 @@
 vim.g.mapleader = " "
--- vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 
 vim.opt.clipboard = 'unnamedplus'
 
-local is_wsl = vim.fn.has("wsl") == 1
--- local is_mac = vim.fn.has("macunix") == 1
--- local is_linux = not is_wsl and not is_mac
+local map = vim.api.nvim_set_keymap
 
--- WSL Clipboard support
-if is_wsl then
-  -- This is NeoVim's recommended way to solve clipboard sharing if you use WSL
-  -- See: https://github.com/neovim/neovim/wiki/FAQ#how-to-use-the-windows-clipboard-from-wsl
-  vim.g.clipboard = {
-    name = "WslClipboard",
-    copy = {
-      ["+"] = "clip.exe",
-      ["*"] = "clip.exe",
-    },
-    paste = {
-      ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-      ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    },
-    cache_enabled = 0,
-  }
-end
+local opts = { silent = true }
 
-vim.cmd[[set number]]
+map("n", "<leader>w", [[<cmd>w<CR>]], opts)
+map("n", "<leader>c", [[<cmd>lua require('bufdelete').bufdelete(0)<CR>]], opts)
+map("n", "<leader>q", [[<cmd>qa<CR>]], opts)
 
-local opts = { noremap = true, silent = true }
+map("n", "=", [[<cmd>vertical resize +5<cr>]], opts)
+map("n", "-", [[<cmd>vertical resize -5<cr>]], opts)
+map("n", "+", [[<cmd>horizontal resize +2<cr>]], opts)
+map("n", "_", [[<cmd>horizontal resize -2<cr>]], opts)
 
-vim.keymap.set("n", "<leader>w", ":w<CR>", opts)
-vim.keymap.set("n", "<leader>c", ":bd<CR>", opts)
-vim.keymap.set("n", "<leader>q", ":qa<CR>", opts)
+map("n", "<C-h>", [[<C-w>h]], opts)
+map("n", "<C-l>", [[<C-w>l]], opts)
+map("n", "<C-j>", [[<C-w>j]], opts)
+map("n", "<C-k>", [[<C-w>k]], opts)
 
+map('n', '<A-,>', [[<Cmd>BufferLineCyclePrev<CR>]], opts)
+map('n', '<A-.>', [[<Cmd>BufferLineCycleNext<CR>]], opts)
