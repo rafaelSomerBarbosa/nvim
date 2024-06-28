@@ -10,18 +10,24 @@ require("lazy").setup("me.plugins")
 --
 -- vim.cmd([[autocmd BufWritePre *.go lua GoImports()]])
 
-
-
 -- vim.cmd([[autocmd BufWritePre *.go :silent! execute ':!goimports' | edit!]])
 -- vim.cmd([[autocmd BufWritePre *.* :normal number=false]])
 
-vim.cmd([[autocmd BufWritePre *.tsx,*.ts Prettier]])
+-- vim.cmd([[autocmd BufWritePre *.tsx,*.ts Prettier]])
+
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
+augroup("__formatter__", { clear = true })
+autocmd("BufWritePost", {
+  group = "__formatter__",
+  command = ":FormatWrite",
+})
 
 local g = vim.g
 local opt = vim.opt
 local cmd = vim.cmd
 
-opt.clipboard = 'unnamedplus'
+opt.clipboard = "unnamedplus"
 opt.termguicolors = true
 
 opt.compatible = false
@@ -31,10 +37,10 @@ opt.history = 100
 
 opt.number = true
 opt.wrap = false
-opt.signcolumn = 'yes'
+opt.signcolumn = "yes"
 opt.showmatch = true
 opt.showmode = false
-opt.foldmethod = 'marker'
+opt.foldmethod = "marker"
 opt.splitright = true
 opt.splitbelow = true
 opt.conceallevel = 0
@@ -45,6 +51,6 @@ opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
 opt.smartindent = true
-opt.shortmess:append {c = true}
+opt.shortmess:append({ c = true })
 opt.number = true
 opt.autowrite = true
