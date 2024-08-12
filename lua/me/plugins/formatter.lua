@@ -45,22 +45,22 @@ return {
         yaml = {
           require("formatter.filetypes.yaml").yamlfmt,
         },
-        sql = {
-          function()
-            return {
-              exe = "sqlfluff",
-              args = {
-                "format",
-                "--disable-progress-bar",
-                "--nocolor",
-                "--dialect postgres",
-                util.escape_path(util.get_current_buffer_file_path()),
-              },
-              stdin = false,
-              ignore_exitcode = true,
-            }
-          end,
-        },
+        -- sql = {
+        --   function()
+        --     return {
+        --       exe = "sqlfluff",
+        --       args = {
+        --         "format",
+        --         "--disable-progress-bar",
+        --         "--nocolor",
+        --         "--dialect postgres",
+        --         util.escape_path(util.get_current_buffer_file_path()),
+        --       },
+        --       stdin = false,
+        --       ignore_exitcode = true,
+        --     }
+        --   end,
+        -- },
         ["*"] = {
           require("formatter.filetypes.any").remove_trailing_whitespace,
         },
