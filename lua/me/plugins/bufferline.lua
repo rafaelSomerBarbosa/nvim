@@ -1,18 +1,18 @@
 return {
-  'akinsho/bufferline.nvim',
-  dependencies = {'nvim-tree/nvim-web-devicons', 'famiu/bufdelete.nvim'},
-  config = function ()
-    local bufferline = require('bufferline')
+  "akinsho/bufferline.nvim",
+  dependencies = { "nvim-tree/nvim-web-devicons", "famiu/bufdelete.nvim" },
+  config = function()
+    local bufferline = require("bufferline")
     bufferline.setup({
       options = {
         numbers = "none",
         offsets = {
           {
-            filetype = "NvimTree",
+            filetype = "neo-tree",
             text = "File Explorer",
             text_align = "left",
-            separator = true
-          }
+            separator = true,
+          },
         },
         color_icons = true,
         enforce_regular_tabs = true,
@@ -20,14 +20,14 @@ return {
         auto_toggle_bufferline = true,
         style_preset = {
           bufferline.style_preset.no_italic,
-          bufferline.style_preset.no_bold
+          bufferline.style_preset.no_bold,
         },
         hover = {
           enabled = true,
           delay = 200,
-          reveal = {'close'}
+          reveal = { "close" },
         },
-        sort_by = 'insert_after_current',
+        sort_by = "insert_after_current",
         diagnostics = "nvim_lsp",
         --- count is an integer representing total count of errors
         --- level is a string "error" | "warning"
@@ -37,8 +37,8 @@ return {
         diagnostics_indicator = function(count, level, diagnostics_dict, context)
           local icon = level:match("error") and " " or " "
           return " " .. icon .. count
-        end
-      }
+        end,
+      },
     })
-  end
+  end,
 }
