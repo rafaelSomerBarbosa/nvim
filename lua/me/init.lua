@@ -1,5 +1,6 @@
 require("me.remap")
 require("me.lazyvim")
+require("me.dap")
 require("lazy").setup("me.plugins")
 
 -- function GoImports()
@@ -17,6 +18,7 @@ require("lazy").setup("me.plugins")
 
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
+
 augroup("__formatter__", { clear = true })
 autocmd("BufWritePost", {
   group = "__formatter__",
@@ -54,3 +56,4 @@ opt.smartindent = true
 opt.shortmess:append({ c = true })
 opt.number = true
 opt.autowrite = true
+opt.timeoutlen = 300

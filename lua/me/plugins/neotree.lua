@@ -7,7 +7,23 @@ return {
     "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
   },
   config = function()
-    vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { silent = true })
+    vim.api.nvim_create_user_command("Neotreefocusing", function()
+      local manager = require("neo-tree.sources.manager")
+      local renderer = require("neo-tree.ui.renderer")
+
+      local state = manager.get_state("filesystem")
+      local window_exists = renderer.window_exists(state)
+
+      if window_exists then
+        vim.cmd("Neotree focus")
+      else
+        vim.cmd("Neotree reveal")
+      end
+    end, { nargs = "?" })
+
+    local map = vim.api.nvim_set_keymap
+    map("n", "<leader>e", [[<cmd>Neotreefocusing<CR>]], { silent = true })
+    map("n", "<leader>ee", [[<cmd>Neotree toggle<CR>]], { silent = true })
 
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
@@ -28,12 +44,6 @@ return {
         mapping_options = {
           noremap = true,
           nowait = true,
-        },
-        mappings = {
-          ["<space>"] = {
-            "toggle_node",
-            nowait = false,
-          },
         },
       },
       filesystem = {

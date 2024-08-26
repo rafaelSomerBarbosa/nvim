@@ -1,7 +1,5 @@
 vim.g.mapleader = " "
 
-vim.opt.clipboard = 'unnamedplus'
-
 local map = vim.api.nvim_set_keymap
 
 local opts = { silent = true }
@@ -20,5 +18,9 @@ map("n", "<C-l>", [[<C-w>l]], opts)
 map("n", "<C-j>", [[<C-w>j]], opts)
 map("n", "<C-k>", [[<C-w>k]], opts)
 
-map('n', '<A-,>', [[<Cmd>BufferLineCyclePrev<CR>]], opts)
-map('n', '<A-.>', [[<Cmd>BufferLineCycleNext<CR>]], opts)
+map("n", "<A-,>", [[<Cmd>BufferLineCyclePrev<CR>]], opts)
+map("n", "<A-.>", [[<Cmd>BufferLineCycleNext<CR>]], opts)
+
+vim.keymap.set("n", "gr", vim.lsp.buf.references, {})
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {})
