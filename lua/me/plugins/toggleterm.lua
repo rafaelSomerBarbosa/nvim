@@ -43,8 +43,8 @@ return {
         return vim.v.shell_error == 0
       end
 
-      local function tmux_send_enter(id, text)
-        vim.fn.system(string.format("tmux send-keys -t %s %s Enter", id, vim.fn.shellescape(text)))
+      local function tmux_send(id, text)
+        vim.fn.system(string.format("tmux send-keys -t %s %s", id, vim.fn.shellescape(text)))
       end
 
       -- <leader>Co — toggle persistent Claude pane
@@ -52,14 +52,13 @@ return {
 
       vim.keymap.set("n", "<leader>Co", function()
         if tmux_pane_alive(tmux_main_pane) then
-          vim.fn.system("tmux kill-pane -t " .. tmux_main_pane)
-          tmux_main_pane = nil
+          vim.fn.system("tmux select-pane -t " .. tmux_main_pane)
         else
           tmux_main_pane = tmux_open("claude")
         end
       end, { desc = "Claude: toggle" })
 
-      -- <leader>Cr — resume a recent conversation
+      -- <leader>Cr — resume a recent conversation (always opens a new pane)
       vim.keymap.set("n", "<leader>Cr", function()
         tmux_open("claude --resume")
       end, { desc = "Claude: resume conversation" })
@@ -70,17 +69,20 @@ return {
       vim.keymap.set("n", "<leader>Cc", function()
         local file = vim.api.nvim_buf_get_name(0)
         local line = vim.api.nvim_win_get_cursor(0)[1]
-        local ctx = string.format("I'm working on %s:%d", file, line)
+        local ctx = string.format("%s:%d", file, line)
         local delay = 500
 
-        if not tmux_pane_alive(tmux_ctx_pane) then
+        if tmux_pane_alive(tmux_ctx_pane) then
+          vim.fn.system("tmux select-pane -t " .. tmux_ctx_pane)
+          vim.defer_fn(function()
+            tmux_send(tmux_ctx_pane, ctx)
+          end, delay)
+        else
           tmux_ctx_pane = tmux_open("claude")
-          delay = 1000
+          vim.defer_fn(function()
+            tmux_send(tmux_ctx_pane, ctx)
+          end, 1000)
         end
-
-        vim.defer_fn(function()
-          tmux_send_enter(tmux_ctx_pane, ctx)
-        end, delay)
       end, { desc = "Claude: new with context" })
 
     else
@@ -123,14 +125,14 @@ return {
           claude_ctx:open()
 
           vim.defer_fn(function()
-            claude_ctx:send(string.format("I'm working on %s:%d", file, line))
+            claude_ctx:send(string.format("%s:%d", file, line))
           end, 1000)
         else
           if not claude_ctx:is_open() then
             claude_ctx:open()
           end
           vim.defer_fn(function()
-            claude_ctx:send(string.format("I'm working on %s:%d", file, line))
+            claude_ctx:send(string.format("%s:%d", file, line))
           end, 500)
         end
       end, { desc = "Claude: new with context" })
